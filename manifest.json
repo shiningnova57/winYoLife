@@ -1,0 +1,25 @@
+{
+
+    "manifest_version": 2,     
+    "name": "'WiN' yo life",    
+    "version": "1.0",
+  
+    "description": "This extension will let you set a timer to take a break, by blacklisting all website except approved 'fun' sites, and then reverse it to blacklisting all approved 'fun' sites after the time is up",
+  
+    //needed, can take an icon, tooltip, badge, popup
+    "browser_action": {
+        "default_icon": "icon.png",
+        //"default_popup": "popup.html" -- we do not need this because we don't need a popup... yet.  Maybe once we get the first part done!
+        //'19' or '38' : image source  -- this will let you use the size of 19x19 or 38x38
+    },
+
+    "background": {
+        "scripts": ["background.js"],
+        //"page": "some.html", -- don't know if this is needed yet
+        //"persistent": false -- need to decide if this is needed 
+        },
+
+        "permissions": [
+        "activeTab"
+        ]
+    }
