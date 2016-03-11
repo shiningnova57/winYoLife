@@ -1,28 +1,85 @@
 <!doctype html>
+
 <html>
+  <head>
+  <title>WiN yo Life!</title>
+  <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300' rel='stylesheet' type='text/css'>
+  <style type="text/css">
+  body {
+    background : #ffffff;
+    background : radial-gradient(ellipse at center, #ffffff 0%, #eee 100%);
+    background : -moz-radial-gradient(#eee, #fff);
+  }
+  .keepcentered {
+    width : 640px;
+    height : 300px;
+    margin-left : auto;
+    margin-right : auto;
+    margin-top: 200px;
+    font-weight : 100;
+  }
+  body {
+    font-family: 'Roboto', sans-serif;
+    font-style : normal;
+    margin : 5px;
+  }
+  td, tr {
+    width: 20%;
+    text-align: center;
+  }
+  a {
+    font-weight: 100;
+    color : #999;
+  }
+  a:hover{
+    color: #eee;
+  }
+  a:link {
+    text-decoration : none;
+    text-shadow: 0px 0px 0px #000;
+  }
+  .currentTime {
+    font-size: 18px;
+  }
+  input#search {
+    width: 100%;
+    color:#d64937;
+    border: 1px solid #d64937;
+    padding: 10px;
+    font-size: 18px;
+  }
+  div#time { font-size: 72px; }
 
+  .red {
+    color : #d64937;
+  }
 
-	<head>
-	    <title>Work is Not Your Life</title>
-	    <style>
-	    body {
-	        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-	        font-size: 100%;
-	    }
-	    #status {
-	        /* avoid an excessively wide status text */
-	        white-space: pre;
-	        text-overflow: ellipsis;
-	        overflow: hidden;
-	        max-width: 400px;
-	    }
-	    </style>
-	</head>
+  .red input#search {
+    border: 1px solid #d64937;
+  }
 
+  .blue input#search {
+    border: 1px solid #0198E1;
+  }
 
-	<body>
-	    <p>test test test!</p>
-	</body>
+  .blue {
+    color : #0198E1;
+  }
 
+  </style>
+  </head>
+
+  <body>
+  <div class="keepcentered red">
+    <center class="currentTime">It is currently<div id="time"></div></center>
+    <p>
+
+      <br>
+      <input id="search" placeholder="Google Search" type="text"/>
+      <br>
+    </p>
+  </div>
+  </body>
+  <script src="tab.js"></script>
 </html>
 
