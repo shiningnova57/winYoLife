@@ -33,3 +33,24 @@ function addSearch(elementId, callback) {
 addSearch('search', function(s) {
   window.location.href = 'https://www.google.com/#q=' + s;
 });
+
+var imlocation = "Manatees/";
+var image_number = 0;
+function ImageArray (n) {
+  this.length = n;
+  for (var i =1; i <= n; i++) {
+    this[i] = ' ';
+  }
+}
+image = new ImageArray(5);
+image[0] = 'image1.jpeg';
+image[1] = 'image2.jpeg';
+image[2] = 'image3.jpeg';
+image[3] = 'image4.jpeg';
+image[4] = 'image5.jpeg';
+var rand = Math.random() * (image.length);
+function randomimage() {
+ image_number = Math.floor(rand);
+ return(image[image_number]);
+}
+document.write("<img class='centerimage' src='" + imlocation + randomimage()+ "'>");
