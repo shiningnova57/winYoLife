@@ -1,11 +1,14 @@
-// listening for an event / one-time requests
-// coming from the popup
-// controls the play or work tag under the icon on the nav bar
+// --------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------   starts with the off badge under the icon on the nav bar!   --------------------------------------------
+
+chrome.browserAction.setBadgeBackgroundColor({color:"#FFA500"});
+chrome.browserAction.setBadgeText({text: "Off!"});  
+
+// --------------------------------------------------------------------------------------------------------------------------------------------
+// -------------------------------   controls the play or work tag under the icon on the nav bar   --------------------------------------------
+
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     switch(request.type) {
-        case "switchMode":
-            switchMode();
-            break;
         case "alarmToggle":
             toggleAlarm();
             break;
@@ -14,9 +17,10 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     return true;
 });
 
-
+// --------------------------------------------------------------------------------------------------------------------------------------------
 // ----------------------------   This toggles the play or work tag under the icon on the nav bar --------------------------------------------
-var workMode = true;
+
+var workMode = false;
 
 function switchMode() {
     chrome.tabs.getSelected(null, function(tab){
@@ -31,41 +35,87 @@ function switchMode() {
     });   
     workMode = !workMode;
 }
-// -------------------------------------------------------------------------------------------------------------------------------------------
-// -------------------------------------------------   This toggles the alarm on or off  -----------------------------------------------------
 
+// --------------------------------------------------------------------------------------------------------------------------------------------
+// -----------------------------------------   Alarm functions to toggle between work and play  -----------------------------------------------
 
 var alarmOn = false;
 
 function toggleAlarm() {
     if (!alarmOn) {
-        startAlarm();
+        workTime();
     }
     else {
+        workMode = false;
         endAlarm();
+        chrome.browserAction.setBadgeBackgroundColor({color:"#FFA500"});
+        chrome.browserAction.setBadgeText({text: "Off!"});  
     }
     alarmOn = !alarmOn;
 } 
 
-function startAlarm() {
-    chrome.alarms.create("testAlarm", {
-        periodInMinutes: .1      //when: an actual time or date(Date.now() + 1000), delayInMinutes: is the wait time for ONE alarm   periodInMinutes: is the length of the alarm period
-    });   
-    // chrome.alarms.create("testAlarm2", {
-    //     periodInMinutes: .2  
-    // });          
-    alert("alarm on!");
+function playTime() {
+    switchMode();
+    chrome.alarms.create("playTimer", {
+        periodInMinutes: 0.1
+    });
+}
+
+function workTime() {
+    switchMode();
+    chrome.alarms.create("workTimer", {
+        periodInMinutes: 0.3
+    })
 }
 
 function endAlarm() {
-    chrome.alarms.clear("testAlarm");
-    // chrome.alarms.clear("testAlarm2");
-    alert("alarm off!");
+    chrome.alarms.clearAll();
 }
 
+// --------------------------------------------------------------------------------------------------------------------------------------------
+// -------------------------------------   Main Timer listener that toggles between work and play  --------------------------------------------
+
 chrome.alarms.onAlarm.addListener(function(alarm) {
-    alert("alarm works!");
+    //alarm.name can be used for things
+    if (alarm.name === "workTimer") {
+        console.log("workTimer fired!", alarm);
+        chrome.alarms.clear("workTimer");
+        playTime();
+    }
+    if (alarm.name ==="playTimer") {
+        console.log('playTimer fired!', alarm);
+        chrome.alarms.clear('playTimer');
+        workTime();
+    }
 });
+
+
+
+
+function findAllTabs () {
+    chrome.tabs.query({},function(tabs){     
+        tabs.forEach(function(tab){         //this runs through every tab open on your browser
+            console.log(tab.url);
+        });
+    });
+}
+
+function findCertainTabs (name) {
+    chrome.tabs.query({},function(tabs){     
+        tabs.forEach(function(tab){
+            if (tab.url.indexOf(name) > -1) {
+                console.log(tab.url);
+            }         
+        });
+    });
+}
+
+
+
+
+
+
+
 
 
 
