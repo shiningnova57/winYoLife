@@ -5,7 +5,7 @@
   
     "description": "This extension will let you set a timer to take a break, by blacklisting all website except approved 'fun' sites, and then reverse it to blacklisting all approved 'fun' sites after the time is up",
     
-    // "omnibox": {"keyword" : "yeah"},
+    // "omnibox": {"keyword" : "accessbox"},
 
     "chrome_url_overrides" : {
         "newtab": "newtab.html"
@@ -15,7 +15,7 @@
     "browser_action": {
         "default_icon": "icon.png",       //image that we put up for the icon
         "detault_title": "WiN yo Life!",   //title when you hover over the icon
-        "default_popup": "popup.html"     //what shows up when you click the icon
+        "default_popup": "popup/popup.html"     //what shows up when you click the icon
         //'19' or '38' : image source  -- this will let you use the size of 19x19 or 38x38
     },
 
@@ -31,6 +31,8 @@
             "js": ["content.js"]
         }
     ],
+
+    "devtools_page": "devTools/devtools.html",
 
     "permissions": [
         "activeTab",      //access only the current tab
