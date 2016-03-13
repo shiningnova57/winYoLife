@@ -1,24 +1,64 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
-// ----------------------------------   starts with the off badge under the icon on the nav bar!   --------------------------------------------
+// --------------------  starts with the off badge under the icon on the nav bar.  define user chosen times ----------------------
 
-chrome.browserAction.setBadgeBackgroundColor({color:"#FFA500"});
-chrome.browserAction.setBadgeText({text: "Off!"});  
+function offBadge() {
+    chrome.browserAction.setBadgeBackgroundColor({color:"#FFA500"});
+    chrome.browserAction.setBadgeText({text: "Off!"});  
+}
+
+offBadge();
+var userWorkTime;
+var userPlayTime;
 
 // --------------------------------------------------------------------------------------------------------------------------------------------
-// -------------------------------   controls the play or work tag under the icon on the nav bar   --------------------------------------------
+// -------------------------------   listener to the popup button, sends the times too   --------------------------------------------
 
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
     switch(request.type) {
         case "alarmToggle":
+            userWorkTime = Number(request.workTime);
+            userPlayTime = Number(request.playTime);
             toggleAlarm();
             break;
     }
-
     return true;
 });
 
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    if(alarmOn) {
+        if(workMode) {
+            toContent("work");
+        }
+        else {
+            toContent("play");
+        }
+    }
+});
+
+chrome.tabs.onCreated.addListener(function(tabId, changeInfo, tab) {   
+    if(alarmOn) {
+        if(workMode) {
+            toContent("work");
+        }
+        else {
+            toContent("play");
+        }
+    }      
+});
+
+chrome.tabs.onActivated.addListener(function(tabId, changeInfo, tab) {
+    if(alarmOn) {
+        if(workMode) {
+            toContent("work");
+        }
+        else {
+            toContent("play");
+        }
+    }
+});
+
 // --------------------------------------------------------------------------------------------------------------------------------------------
-// ----------------------------   This toggles the play or work tag under the icon on the nav bar --------------------------------------------
+// ----------------------------   This toggles the play or work badge under the icon on the nav bar --------------------------------------------
 
 var workMode = false;
 
@@ -43,28 +83,32 @@ var alarmOn = false;
 
 function toggleAlarm() {
     if (!alarmOn) {
+        console.log(userPlayTime); 
+        console.log(userWorkTime);        
+        toContent("start");
         workTime();
     }
     else {
         workMode = false;
         endAlarm();
-        chrome.browserAction.setBadgeBackgroundColor({color:"#FFA500"});
-        chrome.browserAction.setBadgeText({text: "Off!"});  
+        offBadge();
     }
     alarmOn = !alarmOn;
 } 
 
 function playTime() {
+    toContent("play");
     switchMode();
     chrome.alarms.create("playTimer", {
-        periodInMinutes: 0.1
+        periodInMinutes: userPlayTime
     });
 }
 
 function workTime() {
+    toContent("work");
     switchMode();
     chrome.alarms.create("workTimer", {
-        periodInMinutes: 0.3
+        periodInMinutes: userWorkTime
     })
 }
 
@@ -79,121 +123,33 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
     //alarm.name can be used for things
     if (alarm.name === "workTimer") {
         console.log("workTimer fired!", alarm);
+        chrome.notifications.create({
+            type: "basic",
+            title: "WiN yo life",
+            message: "10 minutes to live life!",
+            iconUrl: "Icon.png"
+        })
         chrome.alarms.clear("workTimer");
         playTime();
     }
     if (alarm.name ==="playTimer") {
         console.log('playTimer fired!', alarm);
         chrome.alarms.clear('playTimer');
+        chrome.notifications.create({
+            type: "basic",
+            title: "WiN yo life",
+            message: "Get back to work!",
+            iconUrl: "Icon.png"
+        })
         workTime();
     }
 });
 
-
-
-
-function findAllTabs () {
-    chrome.tabs.query({},function(tabs){     
-        tabs.forEach(function(tab){         //this runs through every tab open on your browser
-            console.log(tab.url);
+//event emitter to the current page!
+function toContent(type) {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {type: type, url: tabs[0].url, isOn: alarmOn}, function(response) {
+            console.log(response.farewell);
         });
-    });
+    }); 
 }
-
-function findCertainTabs (name) {
-    chrome.tabs.query({},function(tabs){     
-        tabs.forEach(function(tab){
-            if (tab.url.indexOf(name) > -1) {
-                console.log(tab.url);
-            }         
-        });
-    });
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-// function check(tab) {
-//  if (tab.url.indexOf('www.quora') > -1) {        // this checks the tab url
-//      alert("hello!")
-//      chrome.tabs.executeScript({
-//          code: 'document.body.style.backgroundColor="red"'       // this executes script code.
-//      });
-//  }
-// }
-
-//chrome.tabs.onUpdated.addListener(test);      //this listens to the button click thing
-
-// // omnibox
-// chrome.omnibox.onInputChanged.addListener(function(text, suggest) {
-//     suggest([
-//       {content: "color-divs", description: "Make everything red"}
-//     ]);
-// });
-// chrome.omnibox.onInputEntered.addListener(function(text) {
-//     if(text == "color-divs") colorDivs();
-// });
-
-// // listening for an event / long-lived connections
-// // coming from devtools
-// chrome.extension.onConnect.addListener(function (port) {
-//     port.onMessage.addListener(function (message) {
-//         switch(port.name) {
-//             case "color-divs-port":
-//                 colorDivs();
-//             break;
-//         }
-//     });
-// });
-
-
-
-
-
-
-
-
-

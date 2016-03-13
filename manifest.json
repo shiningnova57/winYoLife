@@ -35,7 +35,7 @@
     "devtools_page": "devTools/devtools.html",
 
     "permissions": [
-        "activeTab",      //access only the current tab
+        // "activeTab",      //access only the current tab
         "notifications",  //allows notification window to show up
         "tabs",
         "alarms",        //used for timer
