@@ -1,12 +1,12 @@
 var theList = ["facebook","twitter","tumblr"];
 var popUp = false;
+var match = false;
 
 // --------------------------------------------------------------------------------------------------------------------------------------------
 // --------------------------------  Listener for the icon's toggle on/off button ----------------------------------
 
 chrome.runtime.onMessage.addListener(
-	function(request, sender, sendResponse) {
-		var match = false;
+	function(request, sender, sendResponse) {	
 		
 		theList.forEach(function(eachThing) {
 			if (request.url.indexOf(eachThing) > -1) {
@@ -20,6 +20,7 @@ chrome.runtime.onMessage.addListener(
     	if (request.type == "finish") {
     		reject();
     		popUp = false;
+    		match = false;
     		sendResponse({farewell: "content says that it finished"});
     	}
     	if (request.type == "play") {
